@@ -1,1 +1,3 @@
-item: "all group vars"
+LIST_VAR:
+  - fallback1
+  - fallback2

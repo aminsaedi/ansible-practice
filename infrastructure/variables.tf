@@ -12,3 +12,13 @@ variable "region" {
   description = "Region to deploy to"
   type        = string
 }
+
+variable "cloudflare_token" {
+  description = "Your cloudflare API token with write access to your target zone"
+  type = string
+}
+
+variable "cloudflare_zone_id" {
+  description = "Your cloudflare zone id"
+  type = string
+}

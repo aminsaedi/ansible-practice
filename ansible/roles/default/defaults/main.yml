@@ -1,1 +1,2 @@
-item: "var default role"
+listen_ip: 0.0.0.0
+listen_port: 2053

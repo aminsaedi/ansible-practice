@@ -1,46 +1,80 @@
-# - name: Install default packages
-#   apt:
-#     name: "{{ item }}"
-#     state: absent
-#     update_cache: yes
-#   loop: 
-#     - curl
+---
 
-# - name: Set timezone
-#   # timezone:
-#   #   name: Europe/Amsterdam
-#   #   state: present
-#   shell: timedatectl set-timezone Asia/Tehran
+ - name: Install default packages
+   apt:
+     name: "{{ item }}"
+     state: absent
+     update_cache: yes
+   loop: 
+     - curl
+ 
+ - name: Set timezone
+   # timezone:
+   #   name: Europe/Amsterdam
+   #   state: present
+   shell: timedatectl set-timezone Asia/Tehran
+ 
+ - name: Create app directory
+   file:
+     path: /tmp/amin
+     state: directory
+ 
+ - name: Install tree on all nodes
+   apt:
+     name: tree
+     state: present
+ 
+ 
+ - name: Create directories
+   file:
+      state: directory
+      path: /var/temp/{{ item }}
+   loop:
+        - bin
+        - conf
+ 
+ - name: Copy command file
+   copy:
+     src: var/temp/
+     dest: /var/temp/
+     mode: '0541'
+ 
+ - name: Template a file to /etc/file.conf
+   ansible.builtin.template:
+     src: /mytemplates/foo.j2
+     dest: /etc/file.conf
+     owner: bin
+     group: wheel
+     mode: '0644'
+ 
+ - name: Create directories for sepahan
+   file:
+      state: directory
+      path: /var/sepahan
+ 
+ - name: Fist use of template
+   template:
+       src: var/sepahan/team.conf
+       dest: /var/sepahan/team.conf
+   tags:
+      - temp
+ 
 
-# - name: Create app directory
-#   file:
-#     path: /tmp/amin
-#     state: directory
+ - name: Only on app machines
+   file:
+     path: /tmp/app_engine
+     state: directory
+   when: "'app' in ansible_facts.fqdn"
+   tags:
+     - engine
 
-# - name: Copy variable to file
-#   shell: echo "{{ item }}" > /tmp/amin/por.txt
-
-# - name: Print variable
-#   debug:
-#     msg: "{{ item }}"
-
-- name: Install tree on all nodes
-  apt:
-    name: tree
-    state: present
+ - name: All machines except app machines
+   file:
+     path: /tmp/other_engines
+     state: directory
+   when: "'app' not in ansible_facts.fqdn"
+   tags:
+     - engine
 
 
-- name: Create directories
-  file:
-    state: directory
-    path: /var/temp/{{ item }}
-  loop:
-      - bin
-      - conf
-
-- name: Copy command file
-  copy:
-    src: var/temp/
-    dest: /var/temp/
-    mode: '0541'
-
+ - include_tasks: facts.yml
