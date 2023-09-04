@@ -1,0 +1,46 @@
+# - name: Install default packages
+#   apt:
+#     name: "{{ item }}"
+#     state: absent
+#     update_cache: yes
+#   loop: 
+#     - curl
+
+# - name: Set timezone
+#   # timezone:
+#   #   name: Europe/Amsterdam
+#   #   state: present
+#   shell: timedatectl set-timezone Asia/Tehran
+
+# - name: Create app directory
+#   file:
+#     path: /tmp/amin
+#     state: directory
+
+# - name: Copy variable to file
+#   shell: echo "{{ item }}" > /tmp/amin/por.txt
+
+# - name: Print variable
+#   debug:
+#     msg: "{{ item }}"
+
+- name: Install tree on all nodes
+  apt:
+    name: tree
+    state: present
+
+
+- name: Create directories
+  file:
+    state: directory
+    path: /var/temp/{{ item }}
+  loop:
+      - bin
+      - conf
+
+- name: Copy command file
+  copy:
+    src: var/temp/
+    dest: /var/temp/
+    mode: '0541'
+

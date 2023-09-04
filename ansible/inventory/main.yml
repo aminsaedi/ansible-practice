@@ -1,0 +1,21 @@
+---
+
+all:
+  children:
+    app:
+    db:
+    lb:
+
+app:
+  hosts:
+    app1.aminsaedi.bio:
+      # ansible_host: 165.22.250.150
+    app2.aminsaedi.bio:
+
+db:
+  hosts:
+    db.aminsaedi.bio:
+
+lb:
+  hosts:
+    lb.aminsaedi.bio:
